@@ -67,7 +67,7 @@ public class StatsRepository : IStatsRepository
     {
         var trunc = interval switch
         {
-            SampleInterval.Hour => "hour",
+            SampleInterval.Minute => "minute",
             SampleInterval.Day => "day",
             _ => null
         };

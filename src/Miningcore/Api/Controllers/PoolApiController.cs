@@ -142,7 +142,7 @@ public class PoolApiController : ApiControllerBase
     [HttpGet("{poolId}/performance")]
     public async Task<GetPoolStatsResponse> GetPoolPerformanceAsync(string poolId,
         [FromQuery(Name = "r")] SampleRange range = SampleRange.Day,
-        [FromQuery(Name = "i")] SampleInterval interval = SampleInterval.Hour)
+        [FromQuery(Name = "i")] SampleInterval interval = SampleInterval.Minute)
     {
         var pool = GetPool(poolId);
         var ct = HttpContext.RequestAborted;
@@ -337,7 +337,7 @@ public class PoolApiController : ApiControllerBase
 
     [HttpGet("{poolId}/miners/{address}")]
     public async Task<Responses.MinerStats> GetMinerInfoAsync(
-        string poolId, string address, [FromQuery] SampleRange perfMode = SampleRange.Day)
+        string poolId, string address, [FromQuery] SampleRange perfMode = SampleRange.Hour)
     {
         var pool = GetPool(poolId);
         var ct = HttpContext.RequestAborted;
@@ -544,7 +544,7 @@ public class PoolApiController : ApiControllerBase
 
     [HttpGet("{poolId}/miners/{address}/performance")]
     public async Task<Responses.WorkerPerformanceStatsContainer[]> GetMinerPerformanceAsync(
-        string poolId, string address, [FromQuery] SampleRange mode = SampleRange.Day)
+        string poolId, string address, [FromQuery] SampleRange mode = SampleRange.Hour)
     {
         var pool = GetPool(poolId);
         var ct = HttpContext.RequestAborted;
@@ -638,7 +638,7 @@ public class PoolApiController : ApiControllerBase
             case SampleRange.Hour:
                 end = end.AddSeconds(-end.Second);
 
-                start = end.AddHours(-1);
+                start = end.AddHours(-24);
 
                 stats = await cf.Run(con => statsRepo.GetMinerPerformanceBetweenThreeMinutelyAsync(con, pool.Id, address, start, end, ct));
                 break;
